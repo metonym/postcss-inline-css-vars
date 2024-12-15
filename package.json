@@ -1,0 +1,34 @@
+{
+  "name": "postcss-inline-css-vars",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "PostCSS plugin to inline CSS variables",
+  "author": "Eric Liu (https://github.com/metonym)",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "bun test",
+    "build": "bun --bun tsc --project tsconfig.build.json"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@types/jest": "^29.5.14",
+    "postcss": "^8.4.49",
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metonym/postcss-inline-css-vars.git"
+  },
+  "homepage": "https://github.com/metonym/postcss-inline-css-vars",
+  "bugs": "https://github.com/metonym/postcss-inline-css-vars/issues",
+  "keywords": [
+    "postcss",
+    "postcss plugin",
+    "plugin",
+    "CSS variables"
+  ],
+  "files": [
+    "dist"
+  ]
+}
