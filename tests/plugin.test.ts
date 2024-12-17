@@ -34,7 +34,10 @@ describe("inlineCssVars", () => {
       p { color: var(--secondary-color); }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+"h1 { color: #ff0000; }
+      p { color: #00ff00; }"
+`);
   });
 
   test("removes declarations with undefined variables", () => {
@@ -48,7 +51,11 @@ describe("inlineCssVars", () => {
       }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+".button {
+        background: #ff0000;
+      }"
+`);
   });
 
   test("removes declarations with any undefined variable in multi-var declarations", () => {
@@ -62,7 +69,11 @@ describe("inlineCssVars", () => {
       }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+".box {
+        padding: 10px 10px;
+      }"
+`);
   });
 
   test("removes declarations with undefined variables instead of preserving them", () => {
@@ -74,7 +85,11 @@ describe("inlineCssVars", () => {
       }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+"h1 {
+        background: #ff0000;
+      }"
+`);
   });
 
   test("handles nested CSS variables", () => {
@@ -100,7 +115,7 @@ describe("inlineCssVars", () => {
       .box { margin: var(--spacing-y) var(--spacing-x); }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`".box { margin: 20px 10px; }"`);
   });
 
   test("skips processing when no root vars present", () => {
@@ -128,7 +143,15 @@ describe("inlineCssVars", () => {
       .button { color: var(--primary-color); }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+":root.dark {
+        --primary-color: #000000;
+      }
+      :root.light {
+        --primary-color: #ffffff;
+      }
+      .button { color: var(--primary-color); }"
+`);
   });
 
   test("preserves all rules when complex :root selectors exist", () => {
@@ -142,7 +165,15 @@ describe("inlineCssVars", () => {
       .button { color: var(--primary-color); }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+":root {
+        --primary-color: #ffffff;
+      }
+      :root.dark {
+        --primary-color: #000000;
+      }
+      .button { color: var(--primary-color); }"
+`);
   });
 
   test("preserves rules with multiple complex :root selectors", () => {
