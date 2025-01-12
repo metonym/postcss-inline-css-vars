@@ -58,7 +58,7 @@ export const inlineCssVars = (): Plugin => {
         for (const [prop, value] of Object.entries(css_vars)) {
           if (isCssVar(value)) {
             const new_value = value.replace(
-              /var\((--[^)]+)\)/g,
+              RE_CSS_VARS,
               (match, varName) => {
                 return css_vars[varName] || match;
               }
