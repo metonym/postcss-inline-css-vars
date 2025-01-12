@@ -11,11 +11,11 @@
     "build": "bun --bun tsc --project tsconfig.build.json"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.14",
+    "@types/bun": "^1.1.16",
     "@types/jest": "^29.5.14",
     "culls": "^0.1.1",
     "postcss": "^8.4.49",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "repository": {
     "type": "git",
