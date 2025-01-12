@@ -190,6 +190,17 @@ describe("inlineCssVars", () => {
       .button { color: var(--primary-color); }
     `;
 
-    expect(process(source)).toMatchSnapshot();
+    expect(process(source)).toMatchInlineSnapshot(`
+":root {
+        --primary-color: #ffffff;
+      }
+      :root.dark {
+        --primary-color: #000000;
+      }
+      :root[data-theme="custom"] {
+        --primary-color: #ff0000;
+      }
+      .button { color: var(--primary-color); }"
+`);
   });
 });
