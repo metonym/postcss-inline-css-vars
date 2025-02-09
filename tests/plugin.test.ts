@@ -203,4 +203,110 @@ describe("inlineCssVars", () => {
       .button { color: var(--primary-color); }"
 `);
   });
+
+  test("handles circular variable references", () => {
+    const source = `
+      :root {
+        --color-a: var(--color-b);
+        --color-b: var(--color-a);
+      }
+      .button { color: var(--color-a); }
+    `;
+
+    expect(process(source)).toBe(".button { color: var(--color-a); }");
+  });
+
+  test("resolves deeply nested variable references", () => {
+    const source = `
+      :root {
+        --color-base: #ff0000;
+        --color-primary: var(--color-base);
+        --color-button: var(--color-primary);
+        --color-special: var(--color-button);
+      }
+      .button { color: var(--color-special); }
+    `;
+
+    expect(process(source)).toBe(".button { color: #ff0000; }");
+  });
+
+  test("handles variables within complex values", () => {
+    const source = `
+      :root {
+        --spacing: 20px;
+        --color: blue;
+      }
+      .box { 
+        margin: calc(var(--spacing) * 2) 10px;
+        border: 1px solid var(--color);
+      }
+    `;
+
+    expect(process(source)).toBe(
+      ".box { \n        margin: calc(20px * 2) 10px;\n        border: 1px solid blue;\n      }"
+    );
+  });
+
+  test("processes multiple :root declarations sequentially", () => {
+    const source = `
+      :root {
+        --color: blue;
+      }
+      :root {
+        --spacing: 20px;
+      }
+      .box { 
+        color: var(--color);
+        margin: var(--spacing);
+      }
+    `;
+
+    expect(process(source)).toBe(
+      ".box { \n        color: blue;\n        margin: 20px;\n      }"
+    );
+  });
+
+  test("handles empty :root declarations", () => {
+    const source = `
+      :root {}
+      :root {
+        --color: blue;
+      }
+      .box { color: var(--color); }
+    `;
+
+    expect(process(source)).toBe(".box { color: blue; }");
+  });
+
+  test("handles variables with multiple values", () => {
+    const source = `
+      :root {
+        --font-config: bold 16px/1.5 arial;
+        --transform: translate(10px) scale(1.2);
+      }
+      .text { 
+        font: var(--font-config);
+        transform: var(--transform);
+      }
+    `;
+
+    expect(process(source)).toBe(
+      ".text { \n        font: bold 16px/1.5 arial;\n        transform: translate(10px) scale(1.2);\n      }"
+    );
+  });
+
+  test("handles variables used multiple times in single value", () => {
+    const source = `
+      :root {
+        --size: 10px;
+      }
+      .box { 
+        box-shadow: var(--size) var(--size) black, calc(var(--size) * 2) calc(var(--size) * 2) gray;
+      }
+    `;
+
+    expect(process(source)).toBe(
+      ".box { \n        box-shadow: 10px 10px black, calc(10px * 2) calc(10px * 2) gray;\n      }"
+    );
+  });
 });
